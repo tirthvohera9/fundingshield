@@ -33,22 +33,39 @@ function TabBtn({
     <button
       onClick={onClick}
       style={{
-        padding: '10px 20px',
+        padding: '9px 22px',
         borderRadius: '10px',
-        border: active ? '1px solid var(--accent)' : '1px solid transparent',
-        background: active ? 'var(--accent)' : 'rgba(255, 255, 255, 0.3)',
-        color: active ? '#ffffff' : 'var(--text)',
-        fontSize: '0.95rem',
+        border: active ? '1px solid rgba(10, 132, 255, 0.6)' : '1px solid rgba(255,255,255,0.08)',
+        background: active
+          ? 'linear-gradient(135deg, #0a84ff 0%, #0055d4 100%)'
+          : 'rgba(255, 255, 255, 0.07)',
+        color: active ? '#ffffff' : 'var(--text-muted)',
+        fontSize: '0.93rem',
         fontWeight: active ? 600 : 500,
         cursor: 'pointer',
         transition: 'all 0.25s var(--ease-out)',
         letterSpacing: '0.01em',
         whiteSpace: 'nowrap',
-        backdropFilter: active ? 'none' : 'blur(10px)',
-        WebkitBackdropFilter: active ? 'none' : 'blur(10px)',
+        backdropFilter: active ? 'none' : 'blur(12px)',
+        WebkitBackdropFilter: active ? 'none' : 'blur(12px)',
+        boxShadow: active
+          ? '0 2px 12px rgba(10, 132, 255, 0.4), inset 0 1px 0 rgba(255,255,255,0.2)'
+          : 'inset 0 1px 0 rgba(255,255,255,0.08)',
       }}
-      onMouseEnter={(e) => { if (!active) { e.currentTarget.style.background = 'rgba(255, 255, 255, 0.5)'; e.currentTarget.style.color = 'var(--text)'; } }}
-      onMouseLeave={(e) => { if (!active) { e.currentTarget.style.background = 'rgba(255, 255, 255, 0.3)'; e.currentTarget.style.color = 'var(--text)'; } }}
+      onMouseEnter={(e) => {
+        if (!active) {
+          e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)';
+          e.currentTarget.style.color = 'var(--text)';
+          e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)';
+        }
+      }}
+      onMouseLeave={(e) => {
+        if (!active) {
+          e.currentTarget.style.background = 'rgba(255, 255, 255, 0.07)';
+          e.currentTarget.style.color = 'var(--text-muted)';
+          e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)';
+        }
+      }}
     >
       {children}
     </button>
@@ -95,7 +112,7 @@ function ShareButton() {
         alignItems: 'center',
         gap: '6px',
       }}
-      onMouseEnter={(e) => { if (!copied) { e.currentTarget.style.borderColor = '#d4cdc5'; e.currentTarget.style.color = 'var(--text)'; } }}
+      onMouseEnter={(e) => { if (!copied) { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.22)'; e.currentTarget.style.color = 'var(--text)'; } }}
       onMouseLeave={(e) => { if (!copied) { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-muted)'; } }}
     >
       {copied ? '✓ Copied' : '↗ Share'}
@@ -157,23 +174,25 @@ export function Calculator() {
       {/* ── Header - Apple Liquid Glass ── */}
       <header style={{
         flexShrink: 0,
-        padding: '16px 24px',
-        borderBottom: '1px solid var(--border)',
-        background: 'rgba(255, 255, 255, 0.6)',
-        backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(20px)',
+        padding: '14px 24px',
+        borderBottom: '1px solid rgba(255,255,255,0.08)',
+        background: 'rgba(11, 11, 16, 0.72)',
+        backdropFilter: 'blur(32px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(32px) saturate(180%)',
         position: 'sticky',
         top: 0,
         zIndex: 100,
+        boxShadow: 'inset 0 -1px 0 rgba(255,255,255,0.06)',
       }}>
+        {/* Grid: logo | TABS (always centered) | actions */}
         <div
           style={{
             maxWidth: '1600px',
             margin: '0 auto',
-            display: 'flex',
+            display: 'grid',
+            gridTemplateColumns: '1fr auto 1fr',
             alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: '24px',
+            gap: '16px',
           }}
         >
           {/* Logo */}
@@ -205,15 +224,8 @@ export function Calculator() {
             </div>
           </div>
 
-          {/* Center: Tabs */}
-          <div
-            style={{
-              display: 'flex',
-              gap: '4px',
-              flex: 1,
-              justifyContent: 'center',
-            }}
-          >
+          {/* Center: Tabs — always dead-center via grid column */}
+          <div style={{ display: 'flex', gap: '4px' }}>
             <TabBtn active={activeTab === 'calculator'} onClick={() => { setActiveTab('calculator'); logEvent('tab_switched', { to: 'calculator' }); }}>
               Calculator
             </TabBtn>
@@ -225,8 +237,8 @@ export function Calculator() {
             </TabBtn>
           </div>
 
-          {/* Right: Actions */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          {/* Right: Actions — pushed to right edge */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'flex-end' }}>
             {activeTab === 'calculator' && <ShareButton />}
 
             {activeTab === 'calculator' && (
@@ -243,7 +255,7 @@ export function Calculator() {
                   cursor: 'pointer',
                   transition: 'all 0.2s var(--ease-spring)',
                 }}
-                onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#d4cdc5'; e.currentTarget.style.color = 'var(--text)'; }}
+                onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.22)'; e.currentTarget.style.color = 'var(--text)'; }}
                 onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-muted)'; }}
               >
                 Reset
