@@ -19,8 +19,8 @@ export function BreakEvenRate() {
 
   return (
     <div className="card">
-      <div style={{ padding: '28px 32px' }}>
-        <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '16px' }}>
+      <div style={{ padding: '24px' }}>
+        <div style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--text)', marginBottom: '16px' }}>
           Break-Even Rate
         </div>
         <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', marginBottom: '20px', lineHeight: 1.6 }}>

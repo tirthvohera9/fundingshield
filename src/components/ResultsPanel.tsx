@@ -65,7 +65,7 @@ function MetricRow({
 function SectionLabel({ label }: { label: string }) {
   return (
     <div style={{ marginBottom: '20px' }}>
-      <div style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+      <div style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--text)' }}>
         {label}
       </div>
     </div>
@@ -107,7 +107,7 @@ export function CurrentPositionPanel() {
 
   return (
     <div className="card">
-      <div style={{ padding: '28px 32px' }}>
+      <div style={{ padding: '24px' }}>
         <SectionLabel label="Current Position" />
 
         {/* Summary pills */}
@@ -280,7 +280,7 @@ export function AddMarginPanel() {
 
   return (
     <div className="card">
-      <div style={{ padding: '28px 32px' }}>
+      <div style={{ padding: '24px' }}>
         <SectionLabel
           label={`Add Margin${additionalMargin > 0 ? ` · +${formatUSD(additionalMargin)}` : ''}`}
         />
@@ -345,7 +345,7 @@ export function FundingImpactPanel() {
 
   return (
     <div className="card">
-      <div style={{ padding: '28px 32px' }}>
+      <div style={{ padding: '24px' }}>
         <SectionLabel
           label={
             noFunding

@@ -33,20 +33,22 @@ function TabBtn({
     <button
       onClick={onClick}
       style={{
-        padding: '8px 18px',
-        borderRadius: '8px',
-        border: 'none',
-        background: active ? 'var(--accent)' : 'transparent',
-        color: active ? '#ffffff' : 'var(--text-muted)',
+        padding: '10px 20px',
+        borderRadius: '10px',
+        border: active ? '1px solid var(--accent)' : '1px solid transparent',
+        background: active ? 'var(--accent)' : 'rgba(255, 255, 255, 0.3)',
+        color: active ? '#ffffff' : 'var(--text)',
         fontSize: '0.95rem',
         fontWeight: active ? 600 : 500,
         cursor: 'pointer',
-        transition: 'all 0.2s var(--ease-spring)',
+        transition: 'all 0.25s var(--ease-out)',
         letterSpacing: '0.01em',
         whiteSpace: 'nowrap',
+        backdropFilter: active ? 'none' : 'blur(10px)',
+        WebkitBackdropFilter: active ? 'none' : 'blur(10px)',
       }}
-      onMouseEnter={(e) => { if (!active) { e.currentTarget.style.background = 'var(--surface)'; e.currentTarget.style.color = 'var(--text)'; } }}
-      onMouseLeave={(e) => { if (!active) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-muted)'; } }}
+      onMouseEnter={(e) => { if (!active) { e.currentTarget.style.background = 'rgba(255, 255, 255, 0.5)'; e.currentTarget.style.color = 'var(--text)'; } }}
+      onMouseLeave={(e) => { if (!active) { e.currentTarget.style.background = 'rgba(255, 255, 255, 0.3)'; e.currentTarget.style.color = 'var(--text)'; } }}
     >
       {children}
     </button>
@@ -131,17 +133,7 @@ export function Calculator() {
     }, 1500);
   }, [results, pair, leverage, positionNotional, isLong, logEventDebounced]);
 
-  useEffect(() => {
-    const el = scrollRef.current;
-    if (!el || activeTab !== 'calculator') return;
-    const onWheel = (e: WheelEvent) => {
-      if (Math.abs(e.deltaX) > 4) return;
-      e.preventDefault();
-      el.scrollLeft += e.deltaY;
-    };
-    el.addEventListener('wheel', onWheel, { passive: false });
-    return () => el.removeEventListener('wheel', onWheel);
-  }, [activeTab]);
+  // Removed horizontal scroll logic - using vertical layout now
 
   const handleLoadSnapshot = (snap: PositionSnapshot) => {
     if (snap?.position) setPositionData(snap.position);
@@ -162,8 +154,18 @@ export function Calculator() {
     >
       <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
 
-      {/* ── Header ── */}
-      <header style={{ flexShrink: 0, padding: '16px 24px', borderBottom: '1px solid var(--border)' }}>
+      {/* ── Header - Apple Liquid Glass ── */}
+      <header style={{
+        flexShrink: 0,
+        padding: '16px 24px',
+        borderBottom: '1px solid var(--border)',
+        background: 'rgba(255, 255, 255, 0.6)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+        position: 'sticky',
+        top: 0,
+        zIndex: 100,
+      }}>
         <div
           style={{
             maxWidth: '1600px',
@@ -300,89 +302,89 @@ export function Calculator() {
 
       {/* ══════════════ CALCULATOR TAB ══════════════ */}
       {activeTab === 'calculator' && (
-        <div
-          ref={scrollRef}
-          style={{ flex: 1, overflowX: 'auto', overflowY: 'hidden', display: 'flex', alignItems: 'stretch' }}
-        >
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'stretch',
-              gap: '16px',
-              padding: '20px 24px',
-              minWidth: 'max-content',
-            }}
-          >
-            {/* Input panels */}
-            <div className="panel-col">
-              <ErrorBoundary><PositionInput /></ErrorBoundary>
-            </div>
-            <div className="panel-col">
-              <ErrorBoundary><FundingFeeInput /></ErrorBoundary>
-            </div>
-            <div className="panel-col">
-              <ErrorBoundary><AddMarginScenario /></ErrorBoundary>
+        <div style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden' }}>
+          <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '32px 24px 80px' }}>
+            {/* Input panels grid */}
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+                gap: 'var(--spacing-lg)',
+                marginBottom: 'var(--spacing-2xl)',
+              }}
+            >
+              <div className="panel-col">
+                <ErrorBoundary><PositionInput /></ErrorBoundary>
+              </div>
+              <div className="panel-col">
+                <ErrorBoundary><FundingFeeInput /></ErrorBoundary>
+              </div>
+              <div className="panel-col">
+                <ErrorBoundary><AddMarginScenario /></ErrorBoundary>
+              </div>
             </div>
 
-            {/* Separator */}
+            {/* Results section */}
             {results && (
-              <div
-                style={{
-                  width: '1px',
-                  flexShrink: 0,
-                  background: 'var(--border)',
-                  alignSelf: 'stretch',
-                  margin: '0 8px',
-                }}
-              />
-            )}
+              <div>
+                <h3 style={{ margin: '0 0 var(--spacing-lg) 0', fontSize: '1.1rem', fontWeight: 600 }}>
+                  Analysis Results
+                </h3>
+                <div
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+                    gap: 'var(--spacing-lg)',
+                    marginBottom: 'var(--spacing-2xl)',
+                  }}
+                >
+                  <div className="panel-col">
+                    <ErrorBoundary><CurrentPositionPanel /></ErrorBoundary>
+                  </div>
+                  <div className="panel-col">
+                    <ErrorBoundary><AddMarginPanel /></ErrorBoundary>
+                  </div>
+                  <div className="panel-col">
+                    <ErrorBoundary><FundingImpactPanel /></ErrorBoundary>
+                  </div>
+                </div>
 
-            {/* Result panels */}
-            {results ? (
-              <>
+                {/* Funding History Chart - full width */}
                 <div className="panel-col">
-                  <ErrorBoundary><CurrentPositionPanel /></ErrorBoundary>
-                </div>
-                <div className="panel-col">
-                  <ErrorBoundary><AddMarginPanel /></ErrorBoundary>
-                </div>
-                <div className="panel-col">
-                  <ErrorBoundary><FundingImpactPanel /></ErrorBoundary>
-                </div>
-                <div className="panel-col">
-                  <div className="card" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                  <div className="card" style={{ display: 'flex', flexDirection: 'column', minHeight: '400px' }}>
                     <div style={{ padding: '28px 32px', flex: 1, display: 'flex', flexDirection: 'column' }}>
-                      <div
-                        style={{
-                          fontSize: '0.9rem',
-                          fontWeight: 700,
-                          color: 'var(--text)',
-                          textTransform: 'uppercase',
-                          letterSpacing: '0.06em',
-                          marginBottom: '20px',
-                        }}
-                      >
-                        Funding History
+                      <div style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: 'var(--spacing-lg)' }}>
+                        Funding Rate History
                       </div>
                       <ErrorBoundary><FundingRateChart /></ErrorBoundary>
                     </div>
                   </div>
                 </div>
-              </>
-            ) : (
-              ['Position Setup', 'Funding & Duration', 'Margin Scenario', 'Analysis Pending'].map((hint) => (
-                <div key={hint} className="panel-col">
-                  <div className="card" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <div style={{ textAlign: 'center', padding: '32px 24px' }}>
-                      <div style={{ fontSize: '2.4rem', opacity: 0.1, marginBottom: '16px' }}>◎</div>
-                      <p style={{ color: 'var(--text-dim)', fontSize: '0.95rem', lineHeight: 1.6, margin: 0 }}>
-                        {hint}
-                      </p>
+              </div>
+            )}
+
+            {/* Loading state */}
+            {!results && (
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+                  gap: 'var(--spacing-lg)',
+                }}
+              >
+                {['Position Setup', 'Funding & Duration', 'Margin Scenario', 'Analysis Pending'].map((hint) => (
+                  <div key={hint} className="panel-col">
+                    <div className="card" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '300px' }}>
+                      <div style={{ textAlign: 'center', padding: 'var(--spacing-xl)' }}>
+                        <div style={{ fontSize: '2.4rem', opacity: 0.1, marginBottom: 'var(--spacing-md)' }}>◎</div>
+                        <p style={{ color: 'var(--text-dim)', fontSize: '0.95rem', lineHeight: 1.6, margin: 0 }}>
+                          {hint}
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))
+                ))}
+              </div>
             )}
           </div>
         </div>

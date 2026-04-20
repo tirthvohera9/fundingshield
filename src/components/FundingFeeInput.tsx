@@ -41,9 +41,9 @@ export function FundingFeeInput() {
 
   return (
     <div className="card">
-      <div style={{ padding: '28px 32px' }}>
+      <div style={{ padding: '24px' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
-          <h2 style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--text)', margin: 0, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+          <h2 style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--text)', margin: 0 }}>
             Funding Parameters
           </h2>
           <button
