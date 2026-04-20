@@ -1,0 +1,348 @@
+@import "tailwindcss";
+
+/* ═══════════════════════════════════════════════════
+   FundingShield — Apple Liquid Glass (clear glass spec)
+   Updated 2026-04 · iOS 26-style transparent material
+   Brand face: Aptos
+   ═══════════════════════════════════════════════════ */
+
+/* ── Brand face ── */
+@font-face {
+  font-family: 'Aptos';
+  src: url('/fonts/Aptos.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600;700&display=swap');
+
+:root {
+  /* ── Background ── */
+  --bg: #0a0a0d;
+  --bg-secondary: #111114;
+
+  /* ── Glass surfaces (near-colorless — the material refracts, not tints) ── */
+  --surface:           rgba(255, 255, 255, 0.035);
+  --surface-elevated:  rgba(255, 255, 255, 0.06);
+  --card:              rgba(255, 255, 255, 0.045);
+  --card-hover:        rgba(255, 255, 255, 0.075);
+
+  --glass-gradient: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.03) 40%,
+    rgba(255, 255, 255, 0.015) 100%
+  );
+  --glass-gradient-hover: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(255, 255, 255, 0.05) 40%,
+    rgba(255, 255, 255, 0.025) 100%
+  );
+
+  /* ── Borders — edge highlights are the key to liquid glass ── */
+  --border:           rgba(255, 255, 255, 0.08);
+  --border-subtle:    rgba(255, 255, 255, 0.04);
+  --border-highlight: rgba(255, 255, 255, 0.22);
+
+  /* ── Text ── */
+  --text: rgba(255, 255, 255, 0.93);
+  --text-secondary: rgba(255, 255, 255, 0.68);
+  --text-muted: rgba(255, 255, 255, 0.42);
+  --text-dim: rgba(255, 255, 255, 0.22);
+
+  /* ── Apple accent blue (dark mode) ── */
+  --accent: #0a84ff;
+  --accent-2: #0055d4;
+  --accent-dim: rgba(10, 132, 255, 0.18);
+  --accent-hover: rgba(10, 132, 255, 0.28);
+
+  /* ── Status ── */
+  --green: #30d158;
+  --yellow: #ffd60a;
+  --red: #ff453a;
+
+  /* ── Radius ── */
+  --radius: 18px;
+  --radius-md: 14px;
+  --radius-sm: 10px;
+  --radius-xs: 7px;
+
+  /* ── Shadows (Liquid Glass: top highlight, bottom refraction, deep drop) ── */
+  --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 12px 48px rgba(0, 0, 0, 0.55);
+  --shadow-glass:
+    inset 0 1px 0   rgba(255, 255, 255, 0.22),
+    inset 0 -1px 0  rgba(0, 0, 0, 0.18),
+    inset 1px 0 0   rgba(255, 255, 255, 0.06),
+    inset -1px 0 0  rgba(255, 255, 255, 0.06),
+    0 8px 32px      rgba(0, 0, 0, 0.40),
+    0 1px 0         rgba(255, 255, 255, 0.03);
+  --shadow-glass-hover:
+    inset 0 1px 0   rgba(255, 255, 255, 0.32),
+    inset 0 -1px 0  rgba(0, 0, 0, 0.22),
+    inset 1px 0 0   rgba(255, 255, 255, 0.10),
+    inset -1px 0 0  rgba(255, 255, 255, 0.10),
+    0 16px 52px     rgba(0, 0, 0, 0.50),
+    0 1px 0         rgba(255, 255, 255, 0.06);
+
+  /* ── Backdrop blur (high saturation + brightness = lens amplification) ── */
+  --blur-sm: blur(16px) saturate(180%) brightness(1.08);
+  --blur-md: blur(32px) saturate(200%) brightness(1.10);
+  --blur-lg: blur(56px) saturate(220%) brightness(1.12);
+
+  /* ── Spacing ── */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-2xl: 48px;
+
+  /* ── Easing ── */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; }
+
+/* ══════════════════════════════════════════
+   Body
+   ══════════════════════════════════════════ */
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Aptos', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 16px;
+  scrollbar-gutter: stable;
+  overflow-x: hidden;
+}
+
+/* ── Ambient orbs — near-neutral so glass stays clear ── */
+body::before {
+  content: '';
+  position: fixed;
+  top: -20%; right: -10%;
+  width: 60%; height: 65%;
+  background: radial-gradient(ellipse at center,
+    rgba(255, 255, 255, 0.045) 0%,
+    rgba(255, 255, 255, 0.015) 50%,
+    transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(40px);
+  animation: orbDrift1 22s ease-in-out infinite alternate;
+}
+body::after {
+  content: '';
+  position: fixed;
+  bottom: -25%; left: -15%;
+  width: 65%; height: 60%;
+  background: radial-gradient(ellipse at center,
+    rgba(255, 255, 255, 0.035) 0%,
+    rgba(255, 255, 255, 0.01) 50%,
+    transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(40px);
+  animation: orbDrift2 28s ease-in-out infinite alternate;
+}
+
+@keyframes orbDrift1 {
+  0%   { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(-4%, 6%) scale(1.08); }
+}
+@keyframes orbDrift2 {
+  0%   { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(5%, -5%) scale(1.10); }
+}
+
+/* ── Typography ── */
+h1 { font-size: 2.5rem;  font-weight: 800; line-height: 1.2; letter-spacing: -0.02em; }
+h2 { font-size: 1.75rem; font-weight: 700; line-height: 1.3; letter-spacing: -0.01em; }
+h3 { font-size: 1.35rem; font-weight: 600; line-height: 1.4; }
+h4 { font-size: 1.1rem;  font-weight: 600; line-height: 1.5; }
+p  { font-size: 1rem;    line-height: 1.6; color: var(--text-secondary); }
+
+/* ══════════════════════════════════════════
+   Liquid Glass Card — clear material
+   ══════════════════════════════════════════ */
+.card {
+  background: var(--glass-gradient);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  backdrop-filter: var(--blur-md);
+  -webkit-backdrop-filter: var(--blur-md);
+  box-shadow: var(--shadow-glass);
+  transition:
+    background 0.35s var(--ease-out),
+    box-shadow 0.35s var(--ease-out),
+    transform 0.35s var(--ease-out),
+    border-color 0.35s var(--ease-out);
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+  animation: lensIn 0.55s var(--ease-out) both;
+}
+/* Top-edge lens specular — the bright refraction line */
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.25) 20%,
+    rgba(255, 255, 255, 0.35) 50%,
+    rgba(255, 255, 255, 0.25) 80%,
+    transparent 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+.card:hover {
+  background: var(--glass-gradient-hover);
+  border-color: var(--border-highlight);
+  box-shadow: var(--shadow-glass-hover);
+  transform: translateY(-2px);
+}
+
+@keyframes lensIn {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.97);
+    filter: blur(6px);
+    backdrop-filter: blur(0px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+    backdrop-filter: var(--blur-md);
+  }
+}
+
+.card:nth-child(1) { animation-delay: 0.00s; }
+.card:nth-child(2) { animation-delay: 0.07s; }
+.card:nth-child(3) { animation-delay: 0.14s; }
+.card:nth-child(4) { animation-delay: 0.21s; }
+.card:nth-child(5) { animation-delay: 0.28s; }
+
+/* ══════════════════════════════════════════
+   Input — recessed glass (darker than card so it reads as inset)
+   ══════════════════════════════════════════ */
+.input-field {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-sm);
+  padding: 11px 14px;
+  color: var(--text);
+  font-size: 1rem;
+  font-family: 'Geist Mono', 'Menlo', 'Monaco', 'SF Mono', monospace;
+  outline: none;
+  transition: all 0.25s var(--ease-out);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25);
+}
+.input-field:focus {
+  border-color: var(--accent);
+  background: rgba(0, 0, 0, 0.25);
+  box-shadow:
+    0 0 0 3px rgba(10, 132, 255, 0.18),
+    inset 0 1px 2px rgba(0, 0, 0, 0.25);
+}
+.input-field::placeholder { color: var(--text-dim); }
+
+/* ── Slider (unchanged — accent blue stays on interactive controls) ── */
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.12);
+  cursor: pointer;
+  outline: none;
+}
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: linear-gradient(135deg, #0a84ff 0%, #0055d4 100%);
+  cursor: pointer;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  box-shadow:
+    0 2px 10px rgba(10, 132, 255, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  transition: transform 0.2s var(--ease-bounce), box-shadow 0.2s var(--ease-out);
+}
+.slider::-webkit-slider-thumb:hover {
+  transform: scale(1.22);
+  box-shadow: 0 4px 18px rgba(10, 132, 255, 0.65);
+}
+.slider::-moz-range-track { background: transparent; border: none; }
+.slider::-moz-range-thumb {
+  width: 20px; height: 20px; border-radius: 50%;
+  background: linear-gradient(135deg, #0a84ff 0%, #0055d4 100%);
+  cursor: pointer; border: 2px solid rgba(255, 255, 255, 0.25);
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.24); }
+
+/* ── Utilities ── */
+.font-mono { font-family: 'Geist Mono', 'Menlo', 'Monaco', 'SF Mono', monospace; }
+
+/* ── Metric row ── */
+.metric-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.metric-row:last-child { border-bottom: none; }
+
+/* ── Layout ── */
+@media (min-width: 769px) {
+  html, body { overflow: hidden; height: 100dvh; }
+}
+
+.panel-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--spacing-lg);
+  width: 100%;
+}
+.panel-col { display: flex; flex-direction: column; min-width: 0; }
+.panel-col > .card { flex: 1; }
+
+@media (max-width: 768px) {
+  html, body { overflow: auto !important; height: auto !important; }
+  .panel-row { grid-template-columns: 1fr; }
+  .panel-col { width: 100%; }
+}
+
+/* ── Button ── */
+button { font-family: inherit; transition: all 0.2s var(--ease-out); }
+button:active { transform: scale(0.96); }
+
+/* ── Reveal animation ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
