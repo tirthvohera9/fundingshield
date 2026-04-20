@@ -13,11 +13,16 @@ export function FundingFeeInput() {
   const { logEvent } = useEvents();
 
   const [unit, setUnit] = useState<DurationUnit>('days');
-  const [rawRate, setRawRate] = useState(fundingRate === 0 ? '' : (fundingRate * 100).toFixed(4));
+  const [rawRate, setRawRate] = useState(fundingRate === 0 ? '' : (fundingRate * 100).toFixed(3));
+  const [rawDuration, setRawDuration] = useState(holdingDays === 0 ? '' : String(holdingDays));
 
   useEffect(() => {
-    setRawRate(fundingRate === 0 ? '' : (fundingRate * 100).toFixed(4));
+    setRawRate(fundingRate === 0 ? '' : (fundingRate * 100).toFixed(3));
   }, [fundingRate]);
+
+  useEffect(() => {
+    setRawDuration(holdingDays === 0 ? '' : String(holdingDays));
+  }, [holdingDays]);
 
   const fundingPct = (fundingRate * 100).toFixed(4);
   const displayDuration = Math.round((unit === 'hours' ? holdingDays * 24 : holdingDays) * 10) / 10;
@@ -89,20 +94,20 @@ export function FundingFeeInput() {
             </label>
             <div style={{ position: 'relative', marginBottom: '12px' }}>
               <input
-                type="number"
+                type="text"
                 value={rawRate}
-                step={0.001}
-                min={-0.1}
-                max={10}
                 placeholder=""
                 onChange={(e) => {
                   const s = e.target.value;
-                  setRawRate(s);
-                  const v = parseFloat(s);
-                  if (!isNaN(v) && v >= -0.1 && v <= 10) {
-                    setScenarioData({ fundingRate: v / 100 });
-                  } else if (s === '') {
-                    setScenarioData({ fundingRate: 0 });
+                  // Allow empty string or validate decimal places (max 3)
+                  if (s === '' || /^-?\d*\.?\d{0,3}$/.test(s)) {
+                    setRawRate(s);
+                    const v = parseFloat(s);
+                    if (!isNaN(v) && v >= -0.1 && v <= 10) {
+                      setScenarioData({ fundingRate: v / 100 });
+                    } else if (s === '') {
+                      setScenarioData({ fundingRate: 0 });
+                    }
                   }
                 }}
                 onBlur={() => {
@@ -110,6 +115,9 @@ export function FundingFeeInput() {
                   if (isNaN(v)) {
                     setRawRate('');
                     setScenarioData({ fundingRate: 0 });
+                  } else {
+                    // Format to 3 decimal places on blur
+                    setRawRate(v.toFixed(3));
                   }
                 }}
                 className="input-field font-mono"
@@ -181,13 +189,27 @@ export function FundingFeeInput() {
             </div>
             <input
               type="number"
-              value={displayDuration}
+              value={rawDuration}
               min={unit === 'hours' ? 0.5 : 0.1}
               max={unit === 'hours' ? 23976 : 999}
               step={0.5}
+              placeholder=""
               onChange={(e) => {
-                const v = parseFloat(e.target.value);
-                if (!isNaN(v) && v > 0) handleDurationChange(v);
+                const s = e.target.value;
+                setRawDuration(s);
+                const v = parseFloat(s);
+                if (!isNaN(v) && v > 0) {
+                  handleDurationChange(v);
+                } else if (s === '') {
+                  setScenarioData({ holdingDays: 0 });
+                }
+              }}
+              onBlur={() => {
+                const v = parseFloat(rawDuration);
+                if (isNaN(v) || v <= 0) {
+                  setRawDuration('');
+                  setScenarioData({ holdingDays: 0 });
+                }
               }}
               className="input-field font-mono"
               style={{ marginBottom: '12px' }}
