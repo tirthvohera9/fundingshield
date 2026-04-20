@@ -26,7 +26,7 @@ export function FundingFeeInput() {
 
   const handleDurationChange = (displayVal: number) => {
     const days = unit === 'hours' ? displayVal / 24 : displayVal;
-    if (days > 0 && days <= 365) setScenarioData({ holdingDays: days });
+    if (days > 0 && days <= 999) setScenarioData({ holdingDays: days });
   };
 
   const secondsAgo = lastUpdated ? Math.round((Date.now() - lastUpdated) / 1000) : null;
@@ -166,7 +166,7 @@ export function FundingFeeInput() {
               type="number"
               value={displayDuration}
               min={unit === 'hours' ? 0.5 : 0.1}
-              max={unit === 'hours' ? 8760 : 365}
+              max={unit === 'hours' ? 23976 : 999}
               step={0.5}
               onChange={(e) => {
                 const v = parseFloat(e.target.value);

@@ -270,7 +270,7 @@ export function PositionInput() {
             <NumericInput
               value={entryPrice}
               min={0.001}
-              placeholder="42000"
+              placeholder=""
               onCommit={(v) => setPositionData({ entryPrice: v })}
             />
             {suggestedPrice !== null && (
@@ -314,7 +314,7 @@ export function PositionInput() {
             <NumericInput
               value={positionNotional}
               min={1}
-              placeholder="10000"
+              placeholder=""
               onCommit={(v) => {
                 const newLev = v / margin;
                 setPositionData({ positionNotional: v, leverage: Math.round(newLev * 10) / 10 });
@@ -333,7 +333,7 @@ export function PositionInput() {
             <NumericInput
               value={Math.round(margin * 100) / 100}
               min={0.01}
-              placeholder="2000"
+              placeholder=""
               onCommit={handleMarginChange}
               suffix="USDT"
             />
@@ -347,7 +347,7 @@ export function PositionInput() {
               min={0.1}
               max={200}
               step={0.1}
-              placeholder="5"
+              placeholder=""
               suffix="×"
               onCommit={handleLeverageChange}
             />

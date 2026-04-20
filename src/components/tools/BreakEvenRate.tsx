@@ -58,7 +58,7 @@ export function BreakEvenRate() {
               type="number"
               value={localDays}
               min={0.1}
-              max={365}
+              max={999}
               step={0.5}
               onChange={(e) => setLocalDays(parseFloat(e.target.value) || 1)}
               className="input-field font-mono"

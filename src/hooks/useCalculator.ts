@@ -17,17 +17,17 @@ interface CalculatorStore extends PositionData, ScenarioData {
 const INITIAL_POSITION: PositionData = {
   exchange: 'binance',
   pair: 'BTCUSDT',
-  entryPrice: 42000,
-  positionNotional: 10000,
-  margin: 2000,
-  leverage: 5,
+  entryPrice: 0,
+  positionNotional: 0,
+  margin: 0,
+  leverage: 0,
   isLong: true,
 };
 
 const INITIAL_SCENARIO: ScenarioData = {
   additionalMargin: 0,
-  fundingRate: 0.0008,
-  holdingDays: 5,
+  fundingRate: 0,
+  holdingDays: 999,
 };
 
 export const useCalculator = create<CalculatorStore>((set, get) => ({
