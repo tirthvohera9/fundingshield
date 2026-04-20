@@ -28,7 +28,7 @@ function NumericInput({
   suffix?: string;
   onCommit: (v: number) => void;
 }) {
-  const [raw, setRaw] = useState(String(value));
+  const [raw, setRaw] = useState(value === 0 ? '' : String(value));
 
   useEffect(() => {
     const parsed = parseFloat(raw);
@@ -150,20 +150,23 @@ export function PositionInput() {
   };
 
   const handleLeverageChange = (lev: number) => {
-    const newMargin = positionNotional / lev;
+    if (!lev) return;
+    const newMargin = positionNotional > 0 ? positionNotional / lev : 0;
     setPositionData({ leverage: lev, margin: newMargin });
   };
 
   const handleMarginChange = (m: number) => {
-    const newLeverage = positionNotional / m;
+    if (!m) return;
+    const newLeverage = positionNotional > 0 ? positionNotional / m : 0;
     setPositionData({ margin: m, leverage: Math.round(newLeverage * 10) / 10 });
   };
 
   return (
     <div className="card">
-      <h2 style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--text)', margin: '0 0 28px 0', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+      <div style={{ padding: '24px' }}>
+      <div style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--text)', marginBottom: '20px' }}>
         Position Setup
-      </h2>
+      </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
         {/* Pair with autocomplete */}
@@ -420,6 +423,7 @@ export function PositionInput() {
             </button>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );

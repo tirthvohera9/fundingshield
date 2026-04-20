@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useCalculator } from '@/hooks/useCalculator';
 import { useFundingRates } from '@/hooks/useFundingRates';
 import { useEvents } from '@/hooks/useEvents';
@@ -13,6 +13,11 @@ export function FundingFeeInput() {
   const { logEvent } = useEvents();
 
   const [unit, setUnit] = useState<DurationUnit>('days');
+  const [rawRate, setRawRate] = useState(fundingRate === 0 ? '' : (fundingRate * 100).toFixed(4));
+
+  useEffect(() => {
+    setRawRate(fundingRate === 0 ? '' : (fundingRate * 100).toFixed(4));
+  }, [fundingRate]);
 
   const fundingPct = (fundingRate * 100).toFixed(4);
   const displayDuration = Math.round((unit === 'hours' ? holdingDays * 24 : holdingDays) * 10) / 10;
@@ -85,14 +90,26 @@ export function FundingFeeInput() {
             <div style={{ position: 'relative', marginBottom: '12px' }}>
               <input
                 type="number"
-                value={fundingPct}
+                value={rawRate}
                 step={0.001}
                 min={-0.1}
                 max={10}
+                placeholder=""
                 onChange={(e) => {
-                  const v = parseFloat(e.target.value);
+                  const s = e.target.value;
+                  setRawRate(s);
+                  const v = parseFloat(s);
                   if (!isNaN(v) && v >= -0.1 && v <= 10) {
                     setScenarioData({ fundingRate: v / 100 });
+                  } else if (s === '') {
+                    setScenarioData({ fundingRate: 0 });
+                  }
+                }}
+                onBlur={() => {
+                  const v = parseFloat(rawRate);
+                  if (isNaN(v)) {
+                    setRawRate('');
+                    setScenarioData({ fundingRate: 0 });
                   }
                 }}
                 className="input-field font-mono"
